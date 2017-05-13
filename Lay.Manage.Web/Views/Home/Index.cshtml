@@ -7,8 +7,18 @@
 
     @foreach (var item in Model)
     {
-        <div class="col-md-12">
-            @item.DisplayName
+        <div class="col-md-3">
+            @item.Name
         </div>
+       
+        <div class="col-md-3">
+            @if(item.Children.Count>0){
+                foreach (var child in item.Children)
+                {
+                    <div>@child.Name </div>
+                }
+            }
+        </div>
+      
     }
 </div>
