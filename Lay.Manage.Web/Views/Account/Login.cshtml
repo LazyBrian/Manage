@@ -1,0 +1,132 @@
+﻿@using Abp.Web.Mvc.Extensions
+@using Microsoft.Owin.Security
+@model Lay.Manage.Web.Models.Account.LoginFormViewModel
+@{
+    SetAntiForgeryCookie();
+}
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>AdminLTE 2 | Log in</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="@Url.Content("~/Content/bootstrap.min.css")">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="@Url.Content("~/Content/font-awesome.min.css")">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="@Url.Content("~/Content/AdminLTE/css/AdminLTE.min.css")">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="@Url.Content("~/Content/Plugins/iCheck/square/blue.css")">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="@Url.Content("~/Scripts/others/html5shiv.js")"></script>
+        <script src="@Url.Content("~/Scripts/others/respond.min.js")"></script>
+    <![endif]-->
+
+</head>
+<body class="hold-transition login-page">
+    <div class="login-box">
+        <div class="login-logo">
+            <a href="../../index2.html"><b>Admin</b>LTE</a>
+        </div>
+        <!-- /.login-logo -->
+        <div class="login-box-body" id="LoginArea">
+            <p class="login-box-msg">@L("Login")</p>
+            <form action="@(Url.Action("Login","Account"))" method="post">
+                
+                @if (Model.IsMultiTenancyEnabled)
+                {
+                    <div class="form-group has-feedback">
+                        <input type="text" id="TenancyName" class="form-control" placeholder="@L("TenancyName")" required maxlength="@Lay.Manage.MultiTenancy.Tenant.MaxTenancyNameLength">
+                        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                        <span class="text-muted">@L("CanBeEmptyToLoginAsHost")</span>
+                    </div>
+                }
+                else
+                {
+                    <input type="hidden" id="TenancyName" class="form-control" placeholder="Email">
+                }
+
+                <div class="form-group has-feedback">
+                    <input type="text" class="form-control" id="EmailAddressInput" placeholder="@L("UserNameOrEmail")" required maxlength="@Lay.Manage.Users.User.MaxEmailAddressLength">
+                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback">
+                    <input type="password" class="form-control" id="PasswordInput" placeholder="@L("Password")" required maxlength="@Lay.Manage.Users.User.MaxPlainPasswordLength">
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                </div>
+                <div class="row">
+                    <div class="col-xs-8">
+                        <div class="checkbox icheck">
+                            <label>
+                                <input type="checkbox" id="RememberMeInput">@L("RememberMe")
+                            </label>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-xs-4">
+                        <button type="submit" id="LoginButton" class="btn btn-primary btn-block btn-flat">@L("LogIn")</button>
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <input id="ReturnUrl" type="hidden" name="ReturnUrl" value="@Model.ReturnUrl" />
+                <input id="ReturnUrlHash" type="hidden" name="returnUrlHash" />
+            </form>
+            <button id="LoginButton" type="submit" class="btn btn-primary"><i class="fa fa-sign-in"></i> </button>
+            <a class="btn btn-success" href="@Url.Action("Register")"><i class="fa fa-sign-in"></i> @L("Register")</a>
+            <a href="#">I forgot my password</a><br>
+            <a href="@Url.Action("Register")" class="text-center">@L("Register")</a>
+
+            @{
+                var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes().ToList();
+            }
+            @if (loginProviders.Count > 0)
+            {
+                <p>@L("OrLoginWith"):</p>
+
+
+                using (Html.BeginForm("ExternalLogin", "Account", method: FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+                    <input type="hidden" name="provider" value="" />
+
+                    foreach (var provider in loginProviders)
+                    {
+                        <a class="btn btn-default btn-sm social-login-link" title="@provider.AuthenticationType"
+                           data-provider="@provider.AuthenticationType"
+                           href="javascript:;">
+                            <i class="fa fa-@(provider.AuthenticationType.ToLower())"></i> @provider.AuthenticationType
+                        </a>
+                    }
+                }
+            }
+        </div>
+        <!-- /.login-box-body -->
+    </div>
+    <!-- /.login-box -->
+    <!-- jQuery 2.2.3 -->
+    <script src="@Url.Content("~/Scripts/jquery-2.2.0.min.js")"></script>
+    <!-- Bootstrap 3.3.6 -->
+    <script src="@Url.Content("~/Scripts/bootstrap.min.js")"></script>
+    <!--Abp-->
+    <script src="@Url.Content("~/Abp/Framework/scripts/abp.js")"></script>
+    <script src="@Url.Content("~/Abp/Framework/scripts/libs/abp.jquery.js")"></script>
+    
+    <!-- iCheck -->
+    <script src="@Url.Content("~/Content/Plugins/iCheck/icheck.min.js")"></script>
+
+    <script src="@Url.Content("~/Views/Account/Login.js")"></script>
+    
+</body>
+</html>

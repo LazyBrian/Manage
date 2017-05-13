@@ -1,0 +1,14 @@
+﻿@using Abp.Authorization.Users
+@using Abp.Web.Mvc.Extensions
+@model Abp.Application.Services.Dto.ListResultDto<Lay.Manage.Menus.Dto.MenulistDto>
+@{
+    ViewBag.Title = "Menu";
+}
+@foreach (var menu in Model.Items)
+{
+
+        <p>@menu.Name</p>
+        <p>@menu.CreationTime</p>
+      <a href="/menu/del/@menu.Id">删除</a>
+   
+}

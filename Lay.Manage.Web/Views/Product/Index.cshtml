@@ -1,0 +1,240 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+@model Abp.Application.Services.Dto.ListResultDto<Lay.Manage.Products.Dto.ProductDto>
+
+@section styles{
+    <link rel="stylesheet" href="@Url.Content("~/Content/plugins/select2/select2.min.css")" />
+}
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+
+            <!-- /.box -->
+
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">产品列表</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <form class="form-horizontal">
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-xs-2">
+                                    <div class="form-horizontal">
+                                        @*<label>Minimal</label>*@
+                                        <select class="form-control select2">
+                                            <option selected="selected">全部状态</option>
+                                            <option value="1">正在推广</option>
+                                            <option value="0">停止推广</option>
+                                           
+                                          
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div class="col-xs-3">
+                                    <div class="form-group">
+                                        <label for="inputEmail3" class="col-sm-5 control-label">亚马逊站点</label>
+                                        <div class="col-sm-7">
+                                            <select class="form-control select2">
+                                                <option selected="selected">全部</option>
+                                                <option value="1">美国站</option>
+                                                <option value="2">英国站</option>
+                                                <option value="3">加拿大站</option>
+
+                                               
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-xs-4">
+
+                                    <div class="row">
+                                        <div class="col-xs-4 product-sel-right">
+                                            <div class="form-horizontal">
+                                                @*<label>Minimal</label>*@
+                                                <select class="form-control select2">
+                                                    <option selected="selected" value="NAME">产品标题</option>
+                                                  
+                                                    <option value="ASIN">ASIN</option>
+                                                   
+                                                  
+                                                </select>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-8 product-sel-left">
+                                            <div class="input-group input-group-sm">
+                                                <input type="text" class="form-control" style="height:34px;">
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-info btn-flat" style="height:34px;">Go!</button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-xs-3">
+
+
+
+                                    <div class="input-group input-group-sm">
+                                        <input class="btn btn-block btn-danger " data-toggle="modal" data-target="#product-modal" value="添加产品" type="button">
+                                        <div class="modal fade" id="product-modal">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                        <h4 class="modal-title">添加产品</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+
+                                                        <div class="row show-grid">
+                                                            <div class="col-xs-12">
+                                                            <textarea class="form-control" id="ProductUrl" required rows="6" placeholder="请输入URL或者ASIN，可输入多个，每行一个。"></textarea></div>
+                                                        </div>
+                                                        <div class="row show-grid">
+                                                            <div class="col-xs-12">系统会根据您填写的URL或者ASIN抓取商品信息</div>
+                                                        </div>
+                                                        <div class="row show-grid">
+                                                            <div class="col-xs-12">
+                                                                <select class="form-control select2" style="width:80%" id="ProductType">
+                                                                    <option selected="selected">选择商品所属站点</option>
+                                                                    <option value="1">US</option>
+                                                                    <option value="2">UK</option>
+                                                                    <option value="3">CA</option>
+
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                                        <button type="button" id="btnSubmit" class="btn btn-primary">提交</button>
+
+                                                    </div>
+
+                                                </div>
+                                                <!-- /.modal-content -->
+                                            </div>
+                                            <!-- /.modal-dialog -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </form>
+
+                    <table id="example2" class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>产品信息</th>
+                                <th>开始时间</th>
+                                <th>结束时间</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Items)
+                            {
+                                <tr>
+                                    <td>
+                                        <a href="@item.Url">
+                                            <img src="@item.Pic" width="80" alt="Alternate Text" />
+                                        </a>
+                                        <input type="hidden" id="ProductId" value="@item.Id" />
+                                    </td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-xs-12" style="margin-bottom:40px">@item.Name.Substring(0,10)</div>
+                                            <div class="col-xs-12"> ASIN:@item.Asin  &nbsp;站点：@Enum.GetName(typeof(Lay.Manage.Products.SiteType), @item.Type)</div>
+                                        </div>
+                                    </td>
+                                    <td>
+
+                                        @(item.Cashback.StartDate.Equals(DateTime.MinValue) ? "" : @item.Cashback.StartDate.ToString())
+                                    </td>
+                                    <td> @(item.Cashback.EndDate.Equals(DateTime.MinValue) ? "" : @item.Cashback.EndDate.ToString())</td>
+                                    <td>
+                                        @if (item.IsActive)
+                                        {
+                                            <button type="button" class="btn btn-block btn-success btn-xs">正在推广</button>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" class="btn btn-block btn-default btn-xs" disabled>停止推广</button>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.IsActive)
+                                        {
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-default btn-xs">停止推广</button>
+                                                <button type="button" class="btn btn-info btn-xs">查看商品</button>
+                                            </div>
+
+                                        }
+                                        else
+                                        {
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-primary btn-xs">开始推广</button>
+                                                <button type="button" id="btnDelete" class="btn btn-danger btn-xs">删除</button>
+                                            </div>
+
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+
+</section>
+
+@section scripts{
+    <!-- DataTables -->
+    <script src="@Url.Content("~/Content/plugins/datatables/jquery.dataTables.min.js")"></script>
+    <script src="@Url.Content("~/Content/plugins/datatables/dataTables.bootstrap.min.js")"></script>
+    <script src="@Url.Content("~/Content/plugins/select2/select2.full.min.js")"></script>
+    <!-- SlimScroll 1.3.0 -->
+    <script src="@Url.Content("~/Content/plugins/slimScroll/jquery.slimscroll.min.js")"></script>
+    <script type="text/javascript" src="~/Views/Product/Index.js"></script>
+    <!-- page script -->
+    <script>
+        $(function () {
+            //Initialize Select2 Elements
+            $(".select2").select2();
+            $('#example2').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false
+            });
+        });
+
+
+    </script>
+}

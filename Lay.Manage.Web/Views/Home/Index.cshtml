@@ -1,0 +1,14 @@
+﻿@{
+    ViewBag.ActiveMenu = "Home"; //The menu item will be active for this page.
+}
+@model IReadOnlyList<Abp.Authorization.Permission>
+<h1>@L("WellcomeMessage")</h1>
+<div class="row">
+
+    @foreach (var item in Model)
+    {
+        <div class="col-md-12">
+            @item.DisplayName
+        </div>
+    }
+</div>
