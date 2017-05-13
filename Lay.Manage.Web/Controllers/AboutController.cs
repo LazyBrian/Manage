@@ -7,6 +7,6 @@ namespace Lay.Manage.Web.Controllers
         public ActionResult Index()
         {
             return View();
-        }
+        } 
 	}
 }
