@@ -9,7 +9,9 @@ namespace Lay.Manage.Web.Controllers
         public ActionResult Index()
         {
             var permissions = PermissionManager.GetAllPermissions();
-            return View(permissions);
+            var role = PermissionManager.GetPermission("Products");
+            return View(role);
+          
         }
 	}
 }
